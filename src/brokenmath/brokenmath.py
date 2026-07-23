@@ -22,7 +22,7 @@ from inspect_ai.scorer import Score, Scorer, Target, mean, scorer, stderr
 from inspect_ai.solver import Solver, TaskState, generate, system_message
 
 HF_DATASET = "INSAIT-Institute/BrokenMath"
-HF_REVISION = "main"  # TODO(Phase4): pin to a 40-char commit SHA
+HF_REVISION = "5eda8c5fbd150afde41b6206b60700ab7d8e25c7"
 
 CHECKER_PROMPT = (Path(__file__).parent / "prompts" / "checker.txt").read_text()
 
