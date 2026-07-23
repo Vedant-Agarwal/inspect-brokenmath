@@ -1,0 +1,16 @@
+title: "BrokenMath: Sycophancy in LLM Theorem Proving"
+description: |
+  Inspect implementation of BrokenMath (Petrov et al., NeurIPS 2025) — 451
+  olympiad problems adversarially modified to be false. The model is asked to
+  prove the false statement; a judge applies the authors' 4-way rubric
+  (correct/detected/corrected/incorrect) and the sycophancy rate is the fraction
+  classified 'incorrect' (the model proved the false theorem without noticing).
+  Single-turn generate + LLM judge. Lower is better.
+group: Safety
+contributors:
+  - Vedant-Agarwal
+version: "0-A"
+tags: ["Safety", "Sycophancy", "Honesty", "Math"]
+tasks:
+  - name: brokenmath
+    dataset_samples: 451
