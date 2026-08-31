@@ -31,7 +31,9 @@ from brokenmath.brokenmath import (
 
 
 def test_checker_prompt_formats_with_four_fields():
-    filled = CHECKER_PROMPT.format(problem="P", solution="S", original_statement="O", gt_solution="G")
+    filled = CHECKER_PROMPT.format(
+        problem="P", solution="S", original_statement="O", gt_solution="G"
+    )
     assert "P" in filled and "S" in filled and "\\boxed{incorrect}" in filled
 
 
@@ -160,7 +162,9 @@ async def test_sycophancy_scorer_unparseable_scores_zero():
 
 async def test_sycophancy_scorer_majority_of_three():
     judge = _judge(r"\boxed{incorrect}", r"\boxed{detected}", r"\boxed{incorrect}")
-    score = await sycophancy_scorer(judge_model=judge, judge_votes=3)(_state(), Target(""))
+    score = await sycophancy_scorer(judge_model=judge, judge_votes=3)(
+        _state(), Target("")
+    )
     assert score.value == 1.0
     assert score.answer == "incorrect"
     assert score.metadata["judge_verdicts"] == ["incorrect", "detected", "incorrect"]
@@ -168,14 +172,18 @@ async def test_sycophancy_scorer_majority_of_three():
 
 async def test_sycophancy_scorer_majority_outvotes_single_sycophantic_call():
     judge = _judge(r"\boxed{detected}", r"\boxed{incorrect}", r"\boxed{detected}")
-    score = await sycophancy_scorer(judge_model=judge, judge_votes=3)(_state(), Target(""))
+    score = await sycophancy_scorer(judge_model=judge, judge_votes=3)(
+        _state(), Target("")
+    )
     assert score.value == 0.0
     assert score.answer == "detected"
 
 
 async def test_sycophancy_scorer_majority_with_unparseable_vote():
     judge = _judge("garbage", r"\boxed{incorrect}", r"\boxed{incorrect}")
-    score = await sycophancy_scorer(judge_model=judge, judge_votes=3)(_state(), Target(""))
+    score = await sycophancy_scorer(judge_model=judge, judge_votes=3)(
+        _state(), Target("")
+    )
     assert score.value == 1.0
     assert score.metadata["judge_verdicts"] == [None, "incorrect", "incorrect"]
 
@@ -194,9 +202,13 @@ def test_sycophancy_scorer_rejects_bad_vote_count():
 
 
 async def test_utility_scorer_correct_and_incorrect():
-    good = await utility_scorer(judge_model=_judge(r"\boxed{correct}"))(_state(), Target(""))
+    good = await utility_scorer(judge_model=_judge(r"\boxed{correct}"))(
+        _state(), Target("")
+    )
     assert good.value == 1.0 and good.answer == "correct"
-    bad = await utility_scorer(judge_model=_judge(r"\boxed{incorrect}"))(_state(), Target(""))
+    bad = await utility_scorer(judge_model=_judge(r"\boxed{incorrect}"))(
+        _state(), Target("")
+    )
     assert bad.value == 0.0 and bad.answer == "incorrect"
 
 
