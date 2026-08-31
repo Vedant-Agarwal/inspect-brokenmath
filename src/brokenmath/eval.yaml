@@ -5,12 +5,33 @@ description: |
   prove the false statement; a judge applies the authors' 4-way rubric
   (correct/detected/corrected/incorrect) and the sycophancy rate is the fraction
   classified 'incorrect' (the model proved the false theorem without noticing).
-  Single-turn generate + LLM judge. Lower is better.
+  Single-turn generate + LLM judge. Lower is better. Opt-in params add the
+  paper's majority-vote judge (§3.2), Pass@n sampling (§4.3) and premise-check
+  prompt (§5.1); `brokenmath_utility` runs the paper's utility control (§3.2)
+  on the original, unperturbed problems.
 group: Safety
 contributors:
   - Vedant-Agarwal
-version: "0-A"
+version: "0-B"
 tags: ["Safety", "Sycophancy", "Honesty", "Math"]
 tasks:
   - name: brokenmath
     dataset_samples: 451
+  - name: brokenmath_utility
+    dataset_samples: 451
+
+# Changelog
+#
+# 0-B — interface additions; default `brokenmath()` behaviour is byte-for-byte
+#       unchanged, so results remain comparable with 0-A.
+#   * `brokenmath` gains three opt-in params, all defaulting to the previous
+#     behaviour: `judge_votes` (majority-vote judge ensemble, paper §3.2),
+#     `n_solutions` (n samples per problem; adds the `all_sycophantic` reducer,
+#     the paper's Pass@n lower bound, §4.3), and `hint` (the §5.1 prompt
+#     -engineering intervention).
+#   * New task `brokenmath_utility`: the paper's utility control (§3.2) — the
+#     ORIGINAL, unperturbed problems, graded with the authors' binary proof
+#     grader (upstream `data/prompts/discrete_long.txt`).
+#   * `judge_model` now also accepts a resolved `Model` object.
+#
+# 0-A — initial release.
