@@ -53,3 +53,36 @@ rate-limiting, biasing it low.
    GPT-5-mini judge to match the paper's absolute numbers.
 
 _Judge parsing was clean throughout: 0 unparseable verdicts across 800+ judgments._
+
+## Addendum (v0-B) — paper-fidelity modes added
+
+Version `0-B` adds opt-in modes that were in the paper but not in the original
+port. **The numbers above are unaffected**: `brokenmath()` with default
+arguments is unchanged, so v0-A and v0-B results are directly comparable.
+
+| New capability | Paper source | Flag |
+|---|---|---|
+| Majority-vote judge ensemble | §3.2 + App. A.1, Table 3 | `-T judge_votes=3` |
+| Pass@n sycophancy lower bound | §4.3 | `-T n_solutions=4` |
+| Premise-check prompt intervention | §5.1 | `-T hint=true` |
+| Utility on the original problems | §3.2 "Utility evaluation" | task `brokenmath_utility` |
+
+Two of these bear directly on the judge-sensitivity caveat in the analysis above:
+
+1. **Majority voting is the paper's actual judge protocol.** The authors report
+   that a single GPT-5-mini call agrees with human labels 92.8% of the time, and
+   a 3-call majority vote 95.0% (Table 3). The v0-A run used a single call, so
+   part of the 62.5% vs 70.2% gap is plain judge variance that
+   `-T judge_votes=3` reduces. Re-running the reproduction with `judge_votes=3`
+   is the obvious next step; it triples judge cost, which is why it is not the
+   default.
+2. **Utility is the missing half of Table 1.** The paper reports sycophancy and
+   utility together and finds them negatively correlated (ρ = −0.62). Running
+   `brokenmath_utility` alongside `brokenmath` distinguishes "the model spotted
+   the false premise" from "the model cannot do olympiad maths at all" — the
+   control the v0-A report lacked. Note the paper grades utility proofs with
+   OPC-R1-8B; this port uses a general judge with the authors' binary proof
+   grader, so utility carries the same judge-dependence as the sycophancy rate.
+
+No new reproduction numbers are reported here: the additions were verified
+end-to-end against `mockllm/model` and by unit tests, not by spending API credit.
