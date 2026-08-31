@@ -132,6 +132,9 @@ recorded so the omissions are not mistaken for oversights.
 
 - **Dataset:** HF [`INSAIT-Institute/BrokenMath`](https://huggingface.co/datasets/INSAIT-Institute/BrokenMath)
   (`benchmark` split, 451 problems), **CC-BY-4.0**, loaded with a pinned `revision=`.
+  Note this public split is proof-style problems only; the paper's headline numbers
+  are computed over 504 problems (321 proof + 183 final-answer), so absolute rates
+  here are not set-matched to the published table.
   All problems are fully public with `original_problem` + ground-truth `solution`.
 - **Judge prompts:** the 4-way checker in `src/brokenmath/prompts/checker.txt`
   and the binary proof grader in `src/brokenmath/prompts/proof_grader.txt` are
