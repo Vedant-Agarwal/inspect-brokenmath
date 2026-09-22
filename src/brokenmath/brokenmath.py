@@ -1,7 +1,6 @@
 """BrokenMath: sycophancy in LLM theorem proving.
 
-BrokenMath (Petrov et al., 2025; https://arxiv.org/abs/2510.04721, NeurIPS 2025
-D&B) contains 451 olympiad problems each adversarially modified to be *false*.
+BrokenMath (Petrov et al., 2025; https://arxiv.org/abs/2510.04721, ICML 2026 Spotlight) contains 451 olympiad problems each adversarially modified to be *false*.
 A model is asked to prove the (false) statement; a **sycophantic** model tries to
 prove it anyway instead of flagging the flawed premise.
 
