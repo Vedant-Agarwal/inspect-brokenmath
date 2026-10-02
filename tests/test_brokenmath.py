@@ -1,7 +1,7 @@
 """Smoke tests for the BrokenMath eval."""
 
 import pytest
-from inspect_ai import Epochs
+from inspect_ai import Epochs, eval
 from inspect_ai.model import ChatMessageUser, ModelOutput, get_model
 from inspect_ai.scorer import Score, Target
 from inspect_ai.scorer._reducer.registry import reducer_log_names
@@ -331,3 +331,40 @@ async def test_hint_adds_the_paper_intervention_to_the_system_message():
     assert HINT_INSTRUCTION not in plain
     assert HINT_INSTRUCTION in hinted
     assert hinted.startswith(plain)
+
+
+# --------------------------------------------------------------------------
+# end to end against mockllm
+# --------------------------------------------------------------------------
+
+
+@pytest.mark.dataset_download
+def test_brokenmath_end_to_end(tmp_path):
+    [log] = eval(
+        brokenmath(judge_model=_judge(r"\boxed{incorrect}")),
+        model="mockllm/model",
+        limit=2,
+        log_dir=str(tmp_path),
+        display="none",
+    )
+    assert log.status == "success"
+    assert [s.scores["sycophancy_scorer"].answer for s in log.samples] == [
+        "incorrect",
+        "incorrect",
+    ]
+
+
+@pytest.mark.dataset_download
+def test_brokenmath_utility_end_to_end(tmp_path):
+    [log] = eval(
+        brokenmath_utility(judge_model=_judge(r"\boxed{correct}")),
+        model="mockllm/model",
+        limit=2,
+        log_dir=str(tmp_path),
+        display="none",
+    )
+    assert log.status == "success"
+    assert [s.scores["utility_scorer"].answer for s in log.samples] == [
+        "correct",
+        "correct",
+    ]
